@@ -58,7 +58,6 @@ public class FrameLimiterController : IDisposable {
     [MethodImpl(MethodImplOptions.NoOptimization)]
     private void TryLimitFramerate() {
         if (!System.Config.PluginEnable) return;
-        if (System.BlockList.Count > 0) return;
 
         var targetState = FrameLimiterCondition.GetTargetState();
 

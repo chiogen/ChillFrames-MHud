@@ -6,7 +6,6 @@ using ChillFrames.Controllers;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface;
-using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
@@ -56,19 +55,8 @@ public class SettingsWindow : Window {
 		ImGui.Text($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:F} fps");
 
 		ImGui.TableNextColumn();
-		if (System.BlockList.Count > 0) {
-			if (ImGuiComponents.IconButton("##ReleaseLocks", FontAwesomeIcon.Unlock)) {
-				System.BlockList.Clear();
-			}
-			if (ImGui.IsItemHovered()) {
-				ImGui.SetTooltip("Remove limiter lock");
-			}
 
-			ImGui.SameLine();
-			ImGui.TextColoredWrapped(KnownColor.Red.Vector(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", System.BlockList)}");
-			ImGui.TableNextColumn();
-		}
-		else if (Config.PluginEnable) {
+		if (Config.PluginEnable) {
 			var targetFps = FrameLimiterCondition.GetTargetState() switch {
 				LimiterStateTarget.LowerLimit => Config.Limiter.LowerFramerateTarget,
 				LimiterStateTarget.BaseLimit => Config.Limiter.BaseFramerateTarget,
@@ -79,7 +67,7 @@ public class SettingsWindow : Window {
 			ImGui.Text($"Target Framerate");
 			ImGui.TableNextColumn();
 			ImGui.Text($"{targetFps} fps");
-		} 
+		}
 		else {
 			ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive");
 			ImGui.TableNextColumn();
@@ -172,7 +160,7 @@ public class SettingsWindow : Window {
 		ImGui.TableNextColumn();
 		if (option.Active) {
 			ImGui.TextColored(KnownColor.Green.Vector(), "Active");
-		} 
+		}
 		else {
 			ImGui.TextColored(KnownColor.OrangeRed.Vector(), "Inactive");
 		}

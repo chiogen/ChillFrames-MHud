@@ -4,9 +4,9 @@ using ChillFrames.Utilities;
 namespace ChillFrames.LimiterOptions;
 
 public class DutyRecorderPlayback : IFrameLimiterOption {
-    public string Label => "Duty Recorder Playback";
+	public string Label => "Duty Recorder Playback";
 
-    public bool Active => Services.Condition.IsDutyRecorderPlayback;
+	public bool Active => Services.Condition.IsDutyRecorderPlayback;
 
-    public ref LimiterStateTarget Target => ref System.Config.General.DutyRecorderPlaybackTarget;
+	public ref LimiterStateTarget Target => ref System.Config.General.DutyRecorderPlaybackTarget;
 }

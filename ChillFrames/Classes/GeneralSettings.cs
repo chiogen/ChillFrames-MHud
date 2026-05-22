@@ -15,8 +15,10 @@ public class GeneralSettings {
 	public LimiterStateTarget GposeTarget = LimiterStateTarget.BaseLimit;
 	public LimiterStateTarget IslandSanctuaryTarget = LimiterStateTarget.BaseLimit;
 	public LimiterStateTarget QuestEventTarget = LimiterStateTarget.BaseLimit;
+
 	public bool EnableDtrBar = true;
 	public bool EnableDtrColor = true;
+
 	public Vector4 ActiveColor = KnownColor.LightGreen.Vector();
 	public Vector4 InactiveColor = KnownColor.OrangeRed.Vector();
 }

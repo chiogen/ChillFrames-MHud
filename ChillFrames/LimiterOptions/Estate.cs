@@ -4,9 +4,9 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 namespace ChillFrames.LimiterOptions;
 
 public unsafe class Estate : IFrameLimiterOption {
-    public string Label => "Inside Estate";
+	public string Label => "Inside Estate";
 
-    public bool Active => HousingManager.Instance() is not null && HousingManager.Instance()->IsInside();
+	public bool Active => HousingManager.Instance() is not null && HousingManager.Instance()->IsInside();
 
-    public ref LimiterStateTarget Target => ref System.Config.General.EstateTarget;
+	public ref LimiterStateTarget Target => ref System.Config.General.EstateTarget;
 }

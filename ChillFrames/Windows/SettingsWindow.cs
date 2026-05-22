@@ -17,11 +17,13 @@ public class SettingsWindow : Window {
 
 	public SettingsWindow() : base("ChillFrames Settings") {
 		SizeConstraints = new WindowSizeConstraints {
-			MinimumSize = new Vector2(500.0f, 500.0f),
+			MinimumSize = new Vector2(500.0f, 480.0f),
+			MaximumSize = new Vector2(500.0f, 480.0f),
 		};
 
 		Flags |= ImGuiWindowFlags.NoScrollbar;
 		Flags |= ImGuiWindowFlags.NoScrollWithMouse;
+		Flags |= ImGuiWindowFlags.NoResize;
 	}
 
 	public override void Draw() {
@@ -148,6 +150,12 @@ public class SettingsWindow : Window {
 
 		ImGui.TableHeadersRow();
 
+		ImGui.TableNextRow();
+		ImGui.TableNextColumn();
+		ImGui.Spacing();
+
+		ImGui.TableNextRow();
+
 		foreach (var option in System.LimiterOptions) {
 			DrawOption(option);
 		}
@@ -155,9 +163,17 @@ public class SettingsWindow : Window {
 
 	private void DrawOption(IFrameLimiterOption option) {
 		ImGui.TableNextColumn();
+		var startX = ImGui.GetCursorPosX();
+
+		ImGuiHelpers.ScaledDummy(26.0f);
+		ImGui.SameLine(0.0f);
+		ImGui.SetCursorPosX(startX + 4.0f * ImGuiHelpers.GlobalScale);
+
+		ImGui.AlignTextToFramePadding();
 		ImGui.Text(option.Label);
 
 		ImGui.TableNextColumn();
+		ImGui.AlignTextToFramePadding();
 		if (option.Active) {
 			ImGui.TextColored(KnownColor.Green.Vector(), "Active");
 		}
@@ -166,13 +182,13 @@ public class SettingsWindow : Window {
 		}
 
 		ImGui.TableNextColumn();
-		ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X);
+		ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X - 4.0f * ImGuiHelpers.GlobalScale);
 
 		DrawOptionCombo(option);
 	}
 
 	private string LowerLimitString => $"Use Lower Limit ( {System.Config.Limiter.LowerFramerateTarget} fps )";
-	private string BaseLimitString  => $"Use Base Limit ( {System.Config.Limiter.BaseFramerateTarget} fps )";
+	private string BaseLimitString => $"Use Base Limit ( {System.Config.Limiter.BaseFramerateTarget} fps )";
 	private string UpperLimitString => $"Use Upper Limit ( {System.Config.Limiter.UpperFramerateTarget} fps )";
 
 	private string TargetString(LimiterStateTarget target) => target switch {

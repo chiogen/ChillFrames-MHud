@@ -8,128 +8,128 @@ using Dalamud.Plugin.Services;
 namespace ChillFrames.Controllers;
 
 public class FrameLimiterController : IDisposable {
-    private readonly Stopwatch steppingStopwatch = Stopwatch.StartNew();
-    private readonly Stopwatch timer = Stopwatch.StartNew();
-    private float delayRatio = 1.0f;
-    private bool enabledLastFrame;
+	private readonly Stopwatch steppingStopwatch = Stopwatch.StartNew();
+	private readonly Stopwatch timer = Stopwatch.StartNew();
+	private float delayRatio = 1.0f;
+	private bool enabledLastFrame;
 
-    private LimiterState state;
+	private LimiterState state;
 
-    private static LimiterSettings Settings => System.Config.Limiter;
+	private static LimiterSettings Settings => System.Config.Limiter;
 
-    private static int TargetLowerFramerate => Settings.LowerFramerateTarget;
-    private static int TargetLowerFrametime => 1000 / TargetLowerFramerate;
-    private static int PreciseLowerFrametime => (int) (1000.0f / TargetLowerFramerate * 10000);
+	private static int TargetLowerFramerate => Settings.LowerFramerateTarget;
+	private static int TargetLowerFrametime => 1000 / TargetLowerFramerate;
+	private static int PreciseLowerFrametime => (int) (1000.0f / TargetLowerFramerate * 10000);
 
-    private static int TargetBaseFramerate => Settings.BaseFramerateTarget;
-    private static int TargetBaseFrametime => 1000 / TargetBaseFramerate;
-    private static int PreciseBaseFrametime => (int) (1000.0f / TargetBaseFramerate * 10000);
+	private static int TargetBaseFramerate => Settings.BaseFramerateTarget;
+	private static int TargetBaseFrametime => 1000 / TargetBaseFramerate;
+	private static int PreciseBaseFrametime => (int) (1000.0f / TargetBaseFramerate * 10000);
 
-    private static int TargetUpperFramerate => Settings.UpperFramerateTarget;
-    private static int TargetUpperFrametime => 1000 / TargetUpperFramerate;
-    private static int PreciseUpperFrametime => (int) (1000.0f / TargetUpperFramerate * 10000);
+	private static int TargetUpperFramerate => Settings.UpperFramerateTarget;
+	private static int TargetUpperFrametime => 1000 / TargetUpperFramerate;
+	private static int PreciseUpperFrametime => (int) (1000.0f / TargetUpperFramerate * 10000);
 
-    private static float DisableIncrement => System.Config.DisableIncrementSetting;
-    private static float EnableIncrement => System.Config.EnableIncrementSetting;
+	private static float DisableIncrement => System.Config.DisableIncrementSetting;
+	private static float EnableIncrement => System.Config.EnableIncrementSetting;
 
-    public static TimeSpan LastFrametime { get; private set; }
+	public static TimeSpan LastFrametime { get; private set; }
 
-    public FrameLimiterController()
-        => Services.Framework.Update += OnFrameworkUpdate;
+	public FrameLimiterController()
+		=> Services.Framework.Update += OnFrameworkUpdate;
 
-    public void Dispose()
-        => Services.Framework.Update -= OnFrameworkUpdate;
+	public void Dispose()
+		=> Services.Framework.Update -= OnFrameworkUpdate;
 
-    private void OnFrameworkUpdate(IFramework framework) {
-        UpdateState();
+	private void OnFrameworkUpdate(IFramework framework) {
+		UpdateState();
 
-        UpdateRate();
+		UpdateRate();
 
-        TryLimitFramerate();
+		TryLimitFramerate();
 
-        LastFrametime = timer.Elapsed;
-        timer.Restart();
+		LastFrametime = timer.Elapsed;
+		timer.Restart();
 
-        if (System.Config.General.EnableDtrBar) {
-            System.DtrController.Update();
-        }
-    }
+		if (System.Config.General.EnableDtrBar) {
+			System.DtrController.Update();
+		}
+	}
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    private void TryLimitFramerate() {
-        if (!System.Config.PluginEnable) return;
+	[MethodImpl(MethodImplOptions.NoOptimization)]
+	private void TryLimitFramerate() {
+		if (!System.Config.PluginEnable) return;
 
-        var targetState = FrameLimiterCondition.GetTargetState();
+		var targetState = FrameLimiterCondition.GetTargetState();
 
-        switch (targetState) {
-            case LimiterStateTarget.UpperLimit when state is LimiterState.SteadyState:
-                PerformLimiting(TargetUpperFrametime, PreciseUpperFrametime);
-                break;
+		switch (targetState) {
+			case LimiterStateTarget.UpperLimit when state is LimiterState.SteadyState:
+				PerformLimiting(TargetUpperFrametime, PreciseUpperFrametime);
+				break;
 
-            case LimiterStateTarget.LowerLimit:
-                PerformLimiting(TargetLowerFrametime, PreciseLowerFrametime);
-                break;
+			case LimiterStateTarget.LowerLimit:
+				PerformLimiting(TargetLowerFrametime, PreciseLowerFrametime);
+				break;
 
-            case LimiterStateTarget.BaseLimit:
-            default:
-                PerformLimiting(TargetBaseFrametime, PreciseBaseFrametime);
-                break;
-        }
-    }
+			case LimiterStateTarget.BaseLimit:
+			default:
+				PerformLimiting(TargetBaseFrametime, PreciseBaseFrametime);
+				break;
+		}
+	}
 
-    private void PerformLimiting(int targetFrametime, int preciseFrameTickTime) {
-        var delayTime = (int) (targetFrametime - timer.ElapsedMilliseconds);
+	private void PerformLimiting(int targetFrametime, int preciseFrameTickTime) {
+		var delayTime = (int) (targetFrametime - timer.ElapsedMilliseconds);
 
-        if (delayTime - 1 > 0) {
-            Thread.Sleep(delayTime - 1);
-        }
+		if (delayTime - 1 > 0) {
+			Thread.Sleep(delayTime - 1);
+		}
 
-        while (timer.ElapsedTicks <= preciseFrameTickTime) {
-            ((Action) (() => { }))();
-        }
-    }
+		while (timer.ElapsedTicks <= preciseFrameTickTime) {
+			((Action) (() => { }))();
+		}
+	}
 
-    private void UpdateState() {
-        var shouldLimit = FrameLimiterCondition.GetTargetState() is not LimiterStateTarget.UpperLimit;
+	private void UpdateState() {
+		var shouldLimit = FrameLimiterCondition.GetTargetState() is not LimiterStateTarget.UpperLimit;
 
-        if (enabledLastFrame != shouldLimit) {
-            state = enabledLastFrame switch {
-                true => LimiterState.Disabled,
-                false => LimiterState.Enabled,
-            };
-        }
+		if (enabledLastFrame != shouldLimit) {
+			state = enabledLastFrame switch {
+				true => LimiterState.Disabled,
+				false => LimiterState.Enabled,
+			};
+		}
 
-        enabledLastFrame = shouldLimit;
-    }
+		enabledLastFrame = shouldLimit;
+	}
 
-    private void UpdateRate() {
-        const int stepDelay = 40;
+	private void UpdateRate() {
+		const int stepDelay = 40;
 
-        if (steppingStopwatch.ElapsedMilliseconds > stepDelay) {
-            switch (state) {
-                case LimiterState.Enabled when delayRatio < 1.0f:
-                    delayRatio += EnableIncrement;
-                    break;
+		if (steppingStopwatch.ElapsedMilliseconds > stepDelay) {
+			switch (state) {
+				case LimiterState.Enabled when delayRatio < 1.0f:
+					delayRatio += EnableIncrement;
+					break;
 
-                case LimiterState.Enabled when delayRatio >= 1.0f:
-                    state = LimiterState.SteadyState;
-                    delayRatio = 1.0f;
-                    break;
+				case LimiterState.Enabled when delayRatio >= 1.0f:
+					state = LimiterState.SteadyState;
+					delayRatio = 1.0f;
+					break;
 
-                case LimiterState.Disabled when delayRatio > 0.0f:
-                    delayRatio -= DisableIncrement;
-                    break;
+				case LimiterState.Disabled when delayRatio > 0.0f:
+					delayRatio -= DisableIncrement;
+					break;
 
-                case LimiterState.Disabled when delayRatio <= 0.0f:
-                    delayRatio = 0.0f;
-                    state = LimiterState.SteadyState;
-                    break;
+				case LimiterState.Disabled when delayRatio <= 0.0f:
+					delayRatio = 0.0f;
+					state = LimiterState.SteadyState;
+					break;
 
-                case LimiterState.SteadyState:
-                    break;
-            }
+				case LimiterState.SteadyState:
+					break;
+			}
 
-            steppingStopwatch.Restart();
-        }
-    }
+			steppingStopwatch.Restart();
+		}
+	}
 }

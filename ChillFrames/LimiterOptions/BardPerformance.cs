@@ -4,9 +4,9 @@ using ChillFrames.Utilities;
 namespace ChillFrames.LimiterOptions;
 
 public class BardPerformance : IFrameLimiterOption {
-    public string Label => "Bard Performance";
+	public string Label => "Bard Performance";
 
-    public bool Active => Services.Condition.IsInBardPerformance;
+	public bool Active => Services.Condition.IsInBardPerformance;
 
-    public ref LimiterStateTarget Target => ref System.Config.General.BardPerformanceTarget;
+	public ref LimiterStateTarget Target => ref System.Config.General.BardPerformanceTarget;
 }

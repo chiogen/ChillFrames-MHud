@@ -4,9 +4,9 @@ using FFXIVClientStructs.FFXIV.Client.Game.MJI;
 namespace ChillFrames.LimiterOptions;
 
 public unsafe class IslandSanctuary : IFrameLimiterOption {
-    public string Label => "Island Sanctuary";
+	public string Label => "Island Sanctuary";
 
-    public bool Active => MJIManager.Instance() is not null && MJIManager.Instance()->IsPlayerInSanctuary;
+	public bool Active => MJIManager.Instance() is not null && MJIManager.Instance()->IsPlayerInSanctuary;
 
-    public ref LimiterStateTarget Target => ref System.Config.General.IslandSanctuaryTarget;
+	public ref LimiterStateTarget Target => ref System.Config.General.IslandSanctuaryTarget;
 }

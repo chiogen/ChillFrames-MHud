@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui.Dtr;
 using Dalamud.Game.Text.SeStringHandling;
@@ -17,6 +17,7 @@ public class DtrController : IDisposable {
 		dtrEntry.OnClick = DtrOnClick;
 
 		dtrEntry.Shown = System.Config.General.EnableDtrBar;
+		dtrEntry.MinimumWidth = 60;
 	}
 
 	public void Dispose()

@@ -17,6 +17,7 @@ public class DtrController : IDisposable {
 		dtrEntry.OnClick = DtrOnClick;
 
 		dtrEntry.Shown = System.Config.General.EnableDtrBar;
+		dtrEntry.MinimumWidth = 60;
 	}
 
 	public void Dispose()

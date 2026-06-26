@@ -4,7 +4,7 @@ using ChillFrames.Utilities;
 namespace ChillFrames.LimiterOptions;
 
 public class BoundByDuty : IFrameLimiterOption {
-	public string Label => "Duties";
+	public string Label => "Duties - Any";
 
 	public bool Active => Services.Condition.IsBoundByDuty;
 

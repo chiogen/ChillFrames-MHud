@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Numerics;
 using ChillFrames.Classes;
 using ChillFrames.Controllers;
@@ -17,8 +18,8 @@ public class SettingsWindow : Window {
 
 	public SettingsWindow() : base("ChillFrames Settings") {
 		SizeConstraints = new WindowSizeConstraints {
-			MinimumSize = new Vector2(500.0f, 480.0f),
-			MaximumSize = new Vector2(500.0f, 480.0f),
+			MinimumSize = new Vector2(500.0f, 505.0f),
+			MaximumSize = new Vector2(500.0f, 505.0f),
 		};
 
 		Flags |= ImGuiWindowFlags.NoScrollbar;
@@ -156,7 +157,7 @@ public class SettingsWindow : Window {
 
 		ImGui.TableNextRow();
 
-		foreach (var option in System.LimiterOptions) {
+		foreach (var option in System.LimiterOptions.OrderBy(option => option.Label)) {
 			DrawOption(option);
 		}
 	}
@@ -187,9 +188,9 @@ public class SettingsWindow : Window {
 		DrawOptionCombo(option);
 	}
 
-	private string LowerLimitString => $"Use Lower Limit ( {System.Config.Limiter.LowerFramerateTarget} fps )";
-	private string BaseLimitString => $"Use Base Limit ( {System.Config.Limiter.BaseFramerateTarget} fps )";
-	private string UpperLimitString => $"Use Upper Limit ( {System.Config.Limiter.UpperFramerateTarget} fps )";
+	private string LowerLimitString => $"Use Lower Limit\t( {System.Config.Limiter.LowerFramerateTarget} fps )";
+	private string BaseLimitString => $"Use Base Limit\t   ( {System.Config.Limiter.BaseFramerateTarget} fps )";
+	private string UpperLimitString => $"Use Upper Limit\t( {System.Config.Limiter.UpperFramerateTarget} fps )";
 
 	private string TargetString(LimiterStateTarget target) => target switch {
 		LimiterStateTarget.LowerLimit => LowerLimitString,

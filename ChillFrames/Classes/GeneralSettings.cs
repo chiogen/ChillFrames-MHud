@@ -15,6 +15,7 @@ public class GeneralSettings {
 	public LimiterStateTarget GposeTarget = LimiterStateTarget.BaseLimit;
 	public LimiterStateTarget IslandSanctuaryTarget = LimiterStateTarget.BaseLimit;
 	public LimiterStateTarget QuestEventTarget = LimiterStateTarget.BaseLimit;
+	public LimiterStateTarget HighEndDutyTarget = LimiterStateTarget.BaseLimit;
 
 	public bool EnableDtrBar = true;
 	public bool EnableDtrColor = true;

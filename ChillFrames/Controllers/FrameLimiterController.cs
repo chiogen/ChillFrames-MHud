@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using ChillFrames.Classes;
+using ChillFrames.Utilities;
 using Dalamud.Plugin.Services;
 
 namespace ChillFrames.Controllers;
@@ -58,6 +59,7 @@ public class FrameLimiterController : IDisposable {
 	[MethodImpl(MethodImplOptions.NoOptimization)]
 	private void TryLimitFramerate() {
 		if (!System.Config.PluginEnable) return;
+		if (Services.Condition.IsBetweenAreas) return;
 
 		var targetState = FrameLimiterCondition.GetTargetState();
 

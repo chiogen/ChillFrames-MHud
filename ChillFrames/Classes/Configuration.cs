@@ -11,6 +11,11 @@ public class Configuration {
 
 	public bool PluginEnable = true;
 
+	// MangoHud config
+	public bool UseMangoHud = true;
+	public string MangoHudSourceFile = "X:/.config/MangoHud/MangoHud.conf";
+	public string MangoHudUsedFile = "X:/.config/MangoHud/ffxiv.conf";
+
 	public static Configuration Load()
 		=> Config.LoadConfig<Configuration>("System.config.json");
 

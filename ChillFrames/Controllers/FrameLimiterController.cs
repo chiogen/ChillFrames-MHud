@@ -8,7 +8,7 @@ using Dalamud.Plugin.Services;
 
 namespace ChillFrames.Controllers;
 
-public class FrameLimiterController : IDisposable {
+public class FrameLimiterController : IFrameLimiterController, IDisposable {
 	private readonly Stopwatch steppingStopwatch = Stopwatch.StartNew();
 	private readonly Stopwatch timer = Stopwatch.StartNew();
 	private float delayRatio = 1.0f;

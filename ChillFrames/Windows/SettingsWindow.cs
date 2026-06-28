@@ -139,9 +139,8 @@ public class SettingsWindow : Window {
 
 		ImGui.TableNextRow();
 
-		foreach (var option in System.LimiterOptions.OrderBy(option => option.Label)) {
+		foreach (var option in System.LimiterOptions)
 			DrawOption(option);
-		}
 	}
 
 	private void DrawOption(IFrameLimiterOption option) {

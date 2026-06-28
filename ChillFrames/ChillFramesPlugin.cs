@@ -122,5 +122,6 @@ public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
 		   .Where(type => !type.IsAbstract)
 		   .Select(type => (IFrameLimiterOption?) Activator.CreateInstance(type))
 		   .OfType<IFrameLimiterOption>()
+		   .OrderBy(x => x.Label)
 		   .ToList();
 }

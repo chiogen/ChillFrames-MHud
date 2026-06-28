@@ -77,23 +77,16 @@ public class MangoHudFrameLimiterController : IDisposable
                 return;
 
             List<string> lines = [.. await File.ReadAllLinesAsync(sourceFile)];
-            bool modified = false; // When false, the fps_limit line has to be added
+            string fpsLimitLinePrefix = "fps_limit=";
 
-            for (int i = 0; i < lines.Count; i++)
-            {
-                if (lines[i].StartsWith("fps_limit=", StringComparison.OrdinalIgnoreCase))
-                {
-                    lines[i] = $"fps_limit={value}";
-                    modified = true;
-                    break; // Stop looking once we've found and updated the value
-                }
-            }
+            int lineIndex = lines.FindIndex(x => x.StartsWith(fpsLimitLinePrefix, StringComparison.OrdinalIgnoreCase));
+            if (lineIndex == -1)
+                lines.Add($"fps_limit={value}");
+            else
+                lines[lineIndex] = $"fps_limit={value}";
 
             // Write everything in a single, atomic operation (overwrites automatically)
             await File.WriteAllLinesAsync(destinationFile, lines);
-
-            if (!modified)
-                File.AppendAllText(destinationFile, $"\nfps_limit={value}");
 
         }
         catch (Exception ex)

@@ -4,12 +4,12 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Author>MidoriKami</Author>
+        <Author>iwashere</Author>
         <Name>Chill Frames</Name>
         <Punchline>Dynamic Framerate Limiter, changes fps limit depend on what you are doing</Punchline>
         <Description>Tired of your GPU melting your face off while just running around? Why render at 240 FPS when you're just staring at that gathering node? Fret no more! Chill Frames allows you dynamically limit your framerate when doing unimportant tasks!</Description>
-        <RepoUrl>https://github.com/MidoriKami/ChillFrames</RepoUrl>
-        <Tags>fps;chill;limiter;dtr</Tags>
+        <RepoUrl>https://github.com/chiogen/ChillFrames</RepoUrl>
+        <Tags>fps;chill;limiter;mangohud</Tags>
         <AcceptsFeedback>false</AcceptsFeedback>
     </PropertyGroup>
 </Project>

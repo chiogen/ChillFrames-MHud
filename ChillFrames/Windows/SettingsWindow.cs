@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using ChillFrames.Classes;
@@ -45,6 +46,13 @@ public class SettingsWindow : Window {
 				DrawDtrSettings();
 			}
 		}
+
+		using (var mhudSettingsTab = ImRaii.TabItem("MangoHud"))
+		{
+			if (mhudSettingsTab)
+				DrawMangoHudSettings();
+		}
+
 	}
 
 	private void DrawLimiterStatus() {
@@ -242,4 +250,35 @@ public class SettingsWindow : Window {
 			System.Config.Save();
 		}
 	}
+
+	private void DrawMangoHudSettings()
+	{
+		DrawHeader("MangoHud file paths");
+
+		string sourceFile = System.Config.MangoHudSourceFile;
+		if (ImGui.InputText("Source File", ref sourceFile))
+		{
+			if (File.Exists(sourceFile))
+			{
+				System.Config.MangoHudSourceFile = sourceFile;
+				System.Config.Save();
+			}
+		}
+
+		string destinationFile = System.Config.MangoHudUsedFile;
+		if (ImGui.InputText("Used file", ref destinationFile))
+		{
+			System.Config.MangoHudUsedFile = destinationFile;
+			System.Config.Save();
+		}
+	}
+	
+	private static void DrawHeader(string text)
+	{
+		ImGuiHelpers.ScaledDummy(10.0f);
+		ImGui.Text(text);
+		ImGui.Separator();
+		ImGuiHelpers.ScaledDummy(5.0f);
+	}
+
 }

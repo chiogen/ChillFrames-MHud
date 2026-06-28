@@ -30,7 +30,6 @@ public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
 
 		System.Config = Configuration.Load();
 
-		System.DtrController = new DtrController();
 		System.FrameLimiterController = new MangoHudFrameLimiterController();
 		Services.CommandManager.AddHandler("/chillframes", new CommandInfo(OnCommand) {
 			ShowInHelp = true, HelpMessage = "Open ChillFrames Config",

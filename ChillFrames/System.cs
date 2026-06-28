@@ -10,7 +10,6 @@ public static class System {
 	public static Configuration Config { get; set; } = null!;
 	public static WindowSystem WindowSystem { get; set; } = null!;
 	public static SettingsWindow ConfigWindow { get; set; } = null!;
-	public static DtrController DtrController { get; set; } = null!;
-	public static IFrameLimiterController FrameLimiterController { get; set; } = null!;
+	public static MangoHudFrameLimiterController FrameLimiterController { get; set; } = null!;
 	public static List<IFrameLimiterOption> LimiterOptions { get; set; } = [];
 }

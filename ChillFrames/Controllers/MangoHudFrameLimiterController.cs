@@ -14,13 +14,13 @@ using Serilog;
 
 namespace ChillFrames.Controllers;
 
-public class MangoHudFrameLimiterController : IFrameLimiterController, IDisposable
+public class MangoHudFrameLimiterController : IDisposable
 {
 
 
     private static LimiterSettings Settings => System.Config.Limiter;
 
-    private int storedValue = 0;
+    public int Value = 0;
 
 
     public MangoHudFrameLimiterController()
@@ -31,6 +31,14 @@ public class MangoHudFrameLimiterController : IFrameLimiterController, IDisposab
 
     private void OnFrameworkUpdate(IFramework framework)
     {
+
+        if (!System.Config.PluginEnable)
+        {
+            SetValue(0);
+            return;
+        }
+
+
         var targetState = FrameLimiterCondition.GetTargetState();
 
         switch (targetState)
@@ -51,11 +59,11 @@ public class MangoHudFrameLimiterController : IFrameLimiterController, IDisposab
 
     private void SetValue(int value)
     {
-        if (value == storedValue)
+        if (value == Value)
             return;
 
         UpdateValueAsync(value).WaitSafely();
-        storedValue = value;
+        Value = value;
     }
 
     private static async Task UpdateValueAsync(int value)

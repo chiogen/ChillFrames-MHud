@@ -41,12 +41,6 @@ public class SettingsWindow : Window {
 			}
 		}
 
-		using (var dtrSettings = ImRaii.TabItem("DTR Entry")) {
-			if (dtrSettings) {
-				DrawDtrSettings();
-			}
-		}
-
 		using (var mhudSettingsTab = ImRaii.TabItem("MangoHud"))
 		{
 			if (mhudSettingsTab)
@@ -58,12 +52,6 @@ public class SettingsWindow : Window {
 	private void DrawLimiterStatus() {
 		using var statusTable = ImRaii.Table("status_table", 2);
 		if (!statusTable) return;
-
-		ImGui.TableNextColumn();
-		ImGui.Text($"Current Framerate");
-
-		ImGui.TableNextColumn();
-		ImGui.Text($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:F} fps");
 
 		ImGui.TableNextColumn();
 
@@ -93,20 +81,6 @@ public class SettingsWindow : Window {
 		DrawLimiterOptions();
 	}
 
-	private void DrawDtrSettings() {
-		ImGuiHelpers.ScaledDummy(10.0f);
-		ImGui.Text("Feature Toggles");
-		ImGui.Separator();
-		ImGuiHelpers.ScaledDummy(5.0f);
-		DrawFeatureToggles();
-
-		ImGuiHelpers.ScaledDummy(10.0f);
-		ImGui.Text("Color Options");
-
-		ImGui.Separator();
-		ImGuiHelpers.ScaledDummy(5.0f);
-		DrawColorOptions();
-	}
 
 	private static void DrawFpsLimitOptions() {
 		using var fpsInputTable = ImRaii.Table("fps_input_settings", 3);
@@ -223,30 +197,6 @@ public class SettingsWindow : Window {
 
 		if (ImGui.Selectable(LowerLimitString, option.Target == LimiterStateTarget.LowerLimit)) {
 			option.Target = LimiterStateTarget.LowerLimit;
-			System.Config.Save();
-		}
-	}
-
-	private static void DrawFeatureToggles() {
-		using var pushIndent = ImRaii.PushIndent();
-
-		if (ImGui.Checkbox("Enable", ref System.Config.General.EnableDtrBar)) {
-			System.DtrController.UpdateEnabled();
-			System.Config.Save();
-		}
-
-		if (ImGui.Checkbox("Show Color", ref System.Config.General.EnableDtrColor)) {
-			System.Config.Save();
-		}
-	}
-
-	private static void DrawColorOptions() {
-		using var pushIndent = ImRaii.PushIndent();
-		if (ImGui.ColorEdit4("Enabled Color", ref System.Config.General.ActiveColor)) {
-			System.Config.Save();
-		}
-
-		if (ImGui.ColorEdit4("Disabled Color", ref System.Config.General.InactiveColor)) {
 			System.Config.Save();
 		}
 	}
